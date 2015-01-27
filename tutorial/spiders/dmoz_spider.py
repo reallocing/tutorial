@@ -4,35 +4,42 @@ from scrapy.selector import Selector
 from tutorial.items import DmozItem
 from scrapy.http import Request,FormRequest
 from scrapy.selector import HtmlXPathSelector
+import mysql.connector
 #from scrapy.spider import BaseSpider
 #import MySQLdb
 class DmozSpider(scrapy.Spider):
     name = "dmoz"
     #allowed_domains = ["zdnet.com"]
-    allowed_domains = ["2cto.com"]
-    start_urls = [
-        #"http://security.zdnet.com.cn//"
-        "http://www.2cto.com/News/"
-        #"http://www.dmoz.org/Computers/Programming/Languages/Python/Books/",
-        #"http://www.dmoz.org/Computers/Programming/Languages/Python/Resources/"
-    ]
-#    def GetUrls(self,num):
-#            db = MySQLdb.connect("localhost","root","lcy492","security",charset='utf-8')
-#            cursor = db.cursor()
-#            urls = []
-#            sql = "select link from security.dmoz oder by id limit %s"%(num)
-#            try:
-#                cursor.execute(sql)
-#                data = cursor.fetchall()
-#                for row in data:
-#                    link = row[0]
-#                    url = "http://....."%link
-#                    urls.append(url)
-#            except:
-#                print "Error: unable to fetch data"
-#            else:
-#                return urls
-#        
+    #allowed_domains = ["2cto.com"]
+    start_urls = ["http://www.2cto.com/News/"]
+		
+    def start_requests(self):
+	    #括号内为获取url的数目
+		urls = self.getUrls(4)
+		print urls
+		for url in self.start_urls:
+			yield Request(url)
+			
+    def getUrls(self,num):
+		    #链接数据库
+           db = mysql.connector.connect(user="root",password="123456",database="security")
+		   #获取操作句柄
+           cursor = db.cursor()
+           urls = []
+		   #sql的查询语句，限制查询数目
+           sql = "select link from security.link order by id limit %s"%(num)
+           try:
+               cursor.execute(sql)
+               data = cursor.fetchall()
+               for row in data:
+					print "row:"
+					print row  
+					urls.append(row)
+           except:
+               print "Error: unable to fetch data"
+           else:
+               return urls
+       
     def parse(self,response):
         #print response.body
         sel = Selector(response)
