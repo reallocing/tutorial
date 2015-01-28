@@ -1,29 +1,34 @@
 # -*- coding: utf-8 -*-
-
+#encoding=utf-8
+import sys
+reload(sys) 
+sys.setdefaultencoding('utf-8')
+from sqlalchemy.orm import sessionmaker
+from models import Dmoz, db_connect, create_dmoz_table
 # Define your item pipelines here
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
-class TutorialPipeline(object):
-    def process_item(self, item, spider):
-        return item
+# class TutorialPipeline(object):
+    # def process_item(self, item, spider):
+        # return item
 
-#from sqlalchemy.orm import sessionmaker
-#from models import Dmoz, db_connect, create_dmoz_table
-#  
-#class TutorialPipeline(object):
-#    def __init__(self):
-#        engine = db_connect()
-#        create_dmoz_table(engine)
-#        self.Session = sessionmaker(bind=engine)
-#  
-#    def process_item(self, item, spider):
-#        session = self.Session()
-#        dmoz = Dmoz(**item)
-#        session.add(dmoz)
-#        session.commit()
-#        return item
-#
+ 
+class TutorialPipeline(object):
+   def __init__(self):
+       engine = db_connect()
+       create_dmoz_table(engine)
+       self.Session = sessionmaker(bind=engine)
+       self.Session.configure(bind=engine)
+       
+ 
+   def process_item(self, item, spider):
+       session = self.Session()
+       dmoz = Dmoz(**item)
+       session.add(dmoz)
+       session.commit()
+       return item
+
 
 #from scrapy import signals
 #from twisted.enterprise import adbapi

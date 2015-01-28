@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-
+#encoding=utf-8
+import sys
+reload(sys) 
+sys.setdefaultencoding('utf-8')
 # Scrapy settings for tutorial project
 #
 # For simplicity, this file contains only the most important settings by
@@ -16,9 +19,17 @@ NEWSPIDER_MODULE = 'tutorial.spiders'
 DATABASE = {'drivername': 'mysql',
             'username': 'root',
             'password': '123456',
-            'database': 'spam'
+            'database': 'security'
             }
-			
+
+# DATABASE = {
+    # 'host': 'localhost',
+    # 'user': 'root',
+    # 'password': '123456',
+    # 'db':'security',
+    # 'charset':'utf8'
+# }
+
 ITEM_PIPELINES = {
     'tutorial.pipelines.TutorialPipeline':300
 }

@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
+#encoding=utf-8
+import sys
+reload(sys) 
+sys.setdefaultencoding('utf-8')
 import scrapy
 from scrapy.selector import Selector
 from tutorial.items import DmozItem
 from scrapy.http import Request,FormRequest
 from scrapy.selector import HtmlXPathSelector
 import mysql.connector
+
 #from scrapy.spider import BaseSpider
 #import MySQLdb
 class DmozSpider(scrapy.Spider):
@@ -14,19 +19,19 @@ class DmozSpider(scrapy.Spider):
     start_urls = ["http://www.2cto.com/News/"]
 		
     def start_requests(self):
-	    #括号内为获取url的数目
+	    #鎷彿閲屾暟瀛楁槸姣忔瑕佸彇鐨剈rl鏁扮洰
 		urls = self.getUrls(4)
 		print urls
 		for url in self.start_urls:
 			yield Request(url)
 			
     def getUrls(self,num):
-		    #链接数据库
+		    
            db = mysql.connector.connect(user="root",password="123456",database="security")
-		   #获取操作句柄
+		   
            cursor = db.cursor()
            urls = []
-		   #sql的查询语句，限制查询数目
+		   
            sql = "select link from security.link order by id limit %s"%(num)
            try:
                cursor.execute(sql)
